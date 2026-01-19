@@ -221,6 +221,7 @@
             border-bottom: 1px solid #e0e0e0;
             display: flex;
             gap: 30px;
+            align-items: center;
         }
 
         .stat-item {
@@ -608,6 +609,17 @@
                 font-size: 20px;
             }
 
+            .stats-bar .stat-item:last-child {
+                width: 100%;
+                margin-left: 0 !important;
+                margin-top: 10px;
+            }
+
+            .stats-bar .stat-item:last-child input {
+                flex: 1;
+                min-width: 0;
+            }
+
             .content-body {
                 padding: 15px;
             }
@@ -703,7 +715,7 @@
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
                 <h2 id="content-title">문의리스트</h2>
                 <div class="header-actions">
-                    <button class="btn btn-secondary" onclick="refreshData()">🔄 새로고침</button>
+                    <button class="btn btn-secondary" onclick="logout()">로그아웃</button>
                 </div>
             </div>
 
@@ -728,14 +740,14 @@
                     <span class="stat-label">취소</span>
                     <span class="stat-value" id="stat-cancelled">0</span>
                 </div>
+                <div class="stat-item" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                    <input type="text" id="search-input" placeholder="이름, 전화번호 검색" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; min-width: 200px; font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;">
+                    <button class="btn btn-primary" onclick="performSearch()">검색</button>
+                </div>
             </div>
 
             <div class="content-body">
                 <div class="filter-bar">
-                    <div class="filter-item">
-                        <label>검색:</label>
-                        <input type="text" id="search-input" placeholder="이름, 전화번호 검색" onkeyup="handleSearch(event)">
-                    </div>
                     <div class="filter-item">
                         <label>정렬:</label>
                         <select id="sort-select" onchange="loadInquiries()">
@@ -836,6 +848,16 @@
             checkLogin();
             loadStats();
             loadInquiries();
+            
+            // 검색 입력 필드에서 Enter 키 처리
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
         });
 
         // 로그인 체크 (단순 비밀번호만)
@@ -896,12 +918,24 @@
             listContainer.innerHTML = '<div class="loading">로딩 중...</div>';
 
             try {
-                const url = `/api/inquiries?page=${currentPage}&limit=20`;
+                let url = `/api/inquiries?page=${currentPage}&limit=20`;
                 const response = await fetch(url);
                 const result = await response.json();
 
                 if (result.success) {
-                    displayInquiries(result.data, result.pagination);
+                    let inquiries = result.data;
+                    
+                    // 검색어가 있으면 필터링
+                    if (searchTerm) {
+                        inquiries = inquiries.filter(inquiry => {
+                            const name = inquiry.parent_name?.toLowerCase() || '';
+                            const phone = inquiry.phone_number?.toLowerCase() || '';
+                            const term = searchTerm.toLowerCase();
+                            return name.includes(term) || phone.includes(term);
+                        });
+                    }
+                    
+                    displayInquiries(inquiries, result.pagination);
                 } else {
                     listContainer.innerHTML = '<div class="empty-state">문의를 불러올 수 없습니다.</div>';
                 }
@@ -996,13 +1030,21 @@
             loadInquiries();
         }
 
-        // 검색 처리
-        function handleSearch(event) {
-            if (event.key === 'Enter') {
-                searchTerm = event.target.value;
-                currentPage = 1;
-                loadInquiries();
-            }
+        // 검색 실행
+        function performSearch() {
+            searchTerm = document.getElementById('search-input').value.trim();
+            currentPage = 1;
+            loadInquiries();
+        }
+
+        // 검색 입력 필드에서 Enter 키 처리
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
         }
 
         // 수정 모달 열기
@@ -1131,10 +1173,12 @@
             overlay.classList.remove('active');
         }
 
-        // 새로고침
-        function refreshData() {
-            loadStats();
-            loadInquiries();
+        // 로그아웃
+        function logout() {
+            if (confirm('로그아웃 하시겠습니까?')) {
+                localStorage.removeItem('admin_password');
+                window.location.href = '/login.html';
+            }
         }
 
         // 비밀번호 변경 모달 열기
