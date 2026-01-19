@@ -9,11 +9,13 @@
             margin: 0;
             padding: 0;
             background-color: transparent;
+            overflow-x: hidden;
         }
         .container {
-            width: 600px;
+            width: 100%;
             max-width: 600px;
             margin: 0 auto;
+            padding: 0;
         }
         .image-item {
             width: 100%;
@@ -29,7 +31,7 @@
             padding: 0;
         }
         .sticky-banner {
-            width: 600px;
+            width: 100%;
             max-width: 600px;
             margin: 0 auto;
             position: sticky;
@@ -70,7 +72,7 @@
             }
         }
         .footer {
-            width: 600px;
+            width: 100%;
             max-width: 600px;
             margin: 0 auto;
             background-color: #333333;
@@ -154,8 +156,8 @@
         /* 모달 팝업 */
         .modal-popup {
             position: relative;
-            width: 90%;
-            max-width: 400px;
+            width: 95%;
+            max-width: 500px;
             max-height: 90vh;
             background-color: white;
             border-radius: 12px;
@@ -163,6 +165,7 @@
             overflow-y: auto;
             border: 3px solid #ff0000;
             animation: modalSlideIn 0.3s ease-out;
+            margin: 20px;
         }
         @keyframes modalSlideIn {
             from {
@@ -319,6 +322,86 @@
             border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 0;
+            }
+            
+            .image-item img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+            
+            .sticky-banner {
+                width: 100%;
+            }
+            
+            .footer {
+                width: 100%;
+            }
+            
+            .modal-popup {
+                width: 95%;
+                max-width: 95%;
+                margin: 10px;
+                max-height: 85vh;
+            }
+            
+            .modal-header {
+                padding: 15px;
+            }
+            
+            .modal-header h2 {
+                font-size: 20px;
+            }
+            
+            .modal-header p {
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                padding: 20px 15px;
+            }
+            
+            .form-input {
+                font-size: 16px; /* iOS 줌 방지 */
+                padding: 14px;
+            }
+            
+            .kakao-btn {
+                font-size: 16px; /* iOS 줌 방지 */
+                padding: 18px 20px;
+            }
+            
+            .form-title {
+                font-size: 16px;
+            }
+            
+            .form-subtitle {
+                font-size: 13px;
+            }
+            
+            .form-btn {
+                font-size: 16px;
+                padding: 16px;
+            }
+            
+            .success-modal-content {
+                width: 90%;
+                max-width: 90%;
+                padding: 30px 20px;
+            }
+            
+            .success-title {
+                font-size: 20px;
+            }
+            
+            .success-message {
+                font-size: 15px;
+            }
         }
         .form-input:focus {
             outline: none;
@@ -657,7 +740,7 @@
                     <label class="form-label">
                         <span class="required">*</span>자녀의 생년월일을 입력해주세요.
                     </label>
-                    <input type="date" class="form-input" id="childBirthday" required>
+                    <input type="text" class="form-input" id="childBirthday" placeholder="예: 2020-01-01" required>
                 </div>
                 <div class="form-buttons">
                     <button class="form-btn form-btn-primary" onclick="goToStep(2)">다음</button>
@@ -925,20 +1008,28 @@
             }
 
             // 입력값 확인
-            const childBirthday = document.getElementById('childBirthday').value;
-            const parentName = document.getElementById('parentName').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
+            const childBirthday = document.getElementById('childBirthday').value.trim();
+            const parentName = document.getElementById('parentName').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
 
             if (!childBirthday || !parentName || !phoneNumber) {
                 alert('모든 필수 항목을 입력해주세요.');
                 return;
             }
 
+            // 날짜 형식 검증 (YYYY-MM-DD)
+            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+            if (!datePattern.test(childBirthday)) {
+                alert('생년월일을 올바른 형식으로 입력해주세요. (예: 2020-01-01)');
+                document.getElementById('childBirthday').focus();
+                return;
+            }
+
             // 폼 데이터 수집
             const formData = {
-                childBirthday: childBirthday,
-                parentName: parentName,
-                phoneNumber: phoneNumber,
+                child_birthday: childBirthday,
+                parent_name: parentName,
+                phone_number: phoneNumber,
                 agree1: agree1,
                 agree2: agree2,
                 agree3: document.getElementById('agree3').checked
