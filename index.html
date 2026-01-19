@@ -179,8 +179,11 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            z-index: 20;
+            z-index: 9999;
             transition: background-color 0.3s, transform 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
         }
         .top-btn:hover {
             background-color: #555555;
@@ -192,6 +195,9 @@
         @media (max-width: 768px) {
             .top-btn {
                 bottom: 120px;
+                width: 56px;
+                height: 56px;
+                font-size: 16px;
             }
         }
         /* 모달 오버레이 */
@@ -206,6 +212,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            touch-action: none;
         }
         .modal-overlay.active {
             display: flex;
@@ -223,6 +230,8 @@
             border: 3px solid #ff0000;
             animation: modalSlideIn 0.3s ease-out;
             margin: 20px;
+            z-index: 1001;
+            pointer-events: auto;
         }
         @keyframes modalSlideIn {
             from {
@@ -258,8 +267,10 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
             background-color: white;
             border-radius: 50%;
             border: none;
@@ -267,10 +278,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
             color: #4A90E2;
             font-weight: bold;
             transition: transform 0.2s;
+            z-index: 1001;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
         }
         .modal-close:hover {
             transform: scale(1.1);
@@ -322,6 +337,10 @@
             margin-bottom: 15px;
             transition: background-color 0.3s;
             font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
+            min-height: 48px;
         }
         .kakao-btn:hover {
             background-color: #FDD835;
@@ -493,6 +512,10 @@
             cursor: pointer;
             transition: background-color 0.3s;
             font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
+            min-height: 48px;
         }
         .form-btn-primary {
             background-color: #4A90E2;
@@ -606,16 +629,22 @@
             font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .agreement-modal-close {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
             background-color: #f5f5f5;
             border: none;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
+            z-index: 2001;
         }
         .agreement-modal-close:hover {
             background-color: #e0e0e0;
@@ -702,6 +731,10 @@
             cursor: pointer;
             transition: background-color 0.3s;
             font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: auto;
+            min-height: 48px;
         }
         .success-btn:hover {
             background-color: #357ABD;
@@ -789,23 +822,23 @@
             <p>대표문의 이메일) aimeixi@chanjae.co.kr</p>
         </div>
     </div>
-    <button class="top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">TOP</button>
+    <button class="top-btn" onclick="scrollToTop(event)">TOP</button>
 
     <!-- 모달 팝업 -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-popup">
             <div class="modal-header">
-                <button class="modal-close" onclick="closeModal()">×</button>
+                <button class="modal-close" onclick="closeModal(event)">×</button>
                 <h2>3초 만에 끝</h2>
                 <p>이제 성적이 오를거예요!</p>
             </div>
             <div class="modal-content" id="mainContent">
                 <div class="quick-apply-label">빠른신청</div>
-                <button class="kakao-btn" onclick="handleKakaoLogin()">
+                <button class="kakao-btn" onclick="handleKakaoLogin(event)">
                     <span class="kakao-icon">💬</span>
                     카카오로 시작하기
                 </button>
-                <a href="#" class="direct-input-link" onclick="handleDirectInput(); return false;">직접 입력하기</a>
+                <a href="#" class="direct-input-link" onclick="handleDirectInput(event); return false;">직접 입력하기</a>
             </div>
 
             <!-- 직접 입력 폼 - 1단계: 생년월일 -->
@@ -815,10 +848,10 @@
                     <label class="form-label">
                         <span class="required">*</span>자녀의 생년월일을 입력해주세요.
                     </label>
-                    <input type="text" class="form-input" id="childBirthday" placeholder="예: 2020-01-01" required>
+                    <input type="text" class="form-input" id="childBirthday" placeholder="예: 2020-01-01" maxlength="10" oninput="formatDate(this)" required>
                 </div>
                 <div class="form-buttons">
-                    <button class="form-btn form-btn-primary" onclick="goToStep(2)">다음</button>
+                    <button class="form-btn form-btn-primary" onclick="goToStep(2, event)">다음</button>
                 </div>
             </div>
 
@@ -836,11 +869,11 @@
                     <label class="form-label">
                         <span class="required">*</span>연락 받으실 전화번호를 입력해주세요.
                     </label>
-                    <input type="tel" class="form-input" id="phoneNumber" placeholder="010-1234-5678" required>
+                    <input type="tel" class="form-input" id="phoneNumber" placeholder="010-1234-5678" maxlength="13" oninput="formatPhone(this)" required>
                 </div>
                 <div class="form-buttons">
-                    <button class="form-btn form-btn-secondary" onclick="goToStep(1)">이전</button>
-                    <button class="form-btn form-btn-primary" onclick="goToStep(3)">다음</button>
+                    <button class="form-btn form-btn-secondary" onclick="goToStep(1, event)">이전</button>
+                    <button class="form-btn form-btn-primary" onclick="goToStep(3, event)">다음</button>
                 </div>
             </div>
 
@@ -878,8 +911,8 @@
                     </div>
                 </div>
                 <div class="form-buttons">
-                    <button class="form-btn form-btn-secondary" onclick="goToStep(2)">뒤로</button>
-                    <button class="form-btn form-btn-primary" onclick="submitForm()">신청 하기</button>
+                    <button class="form-btn form-btn-secondary" onclick="goToStep(2, event)">뒤로</button>
+                    <button class="form-btn form-btn-primary" onclick="submitForm(event)">신청 하기</button>
                 </div>
             </div>
         </div>
@@ -890,7 +923,7 @@
         <div class="agreement-modal-content">
             <div class="agreement-modal-header">
                 <h3 id="agreementModalTitle">약관</h3>
-                <button class="agreement-modal-close" onclick="closeAgreementModal()">×</button>
+                <button class="agreement-modal-close" onclick="closeAgreementModal(event)">×</button>
             </div>
             <div class="agreement-modal-body" id="agreementModalBody"></div>
         </div>
@@ -902,7 +935,7 @@
             <div class="success-icon">✓</div>
             <div class="success-title">신청 완료되었습니다.</div>
             <div class="success-message">3일 내로 무료체험 안내 해피콜이 진행됩니다.</div>
-            <button class="success-btn" onclick="closeSuccessModal()">확인</button>
+            <button class="success-btn" onclick="closeSuccessModal(event)">확인</button>
         </div>
     </div>
 
@@ -914,7 +947,11 @@
         }
 
         // 모달 닫기
-        function closeModal() {
+        function closeModal(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             document.getElementById('modalOverlay').classList.remove('active');
             document.body.style.overflow = 'auto';
             resetForm();
@@ -923,7 +960,15 @@
         // 배경 클릭 시 모달 닫기
         document.getElementById('modalOverlay').addEventListener('click', function(e) {
             if (e.target === this) {
-                closeModal();
+                closeModal(e);
+            }
+        });
+
+        // 터치 이벤트로도 처리
+        document.getElementById('modalOverlay').addEventListener('touchend', function(e) {
+            if (e.target === this) {
+                e.preventDefault();
+                closeModal(e);
             }
         });
 
@@ -941,20 +986,81 @@
         });
 
         // 카카오 로그인 처리
-        function handleKakaoLogin() {
+        function handleKakaoLogin(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             // 카카오톡 오픈채팅 링크로 이동
             window.open('https://open.kakao.com/o/sAxz2amd', '_blank');
         }
 
+        // 생년월일 자동 포맷팅 (YYYY-MM-DD)
+        function formatDate(input) {
+            let value = input.value.replace(/[^\d]/g, ''); // 숫자만 추출
+            
+            // 최대 8자리까지만 입력 가능
+            if (value.length > 8) {
+                value = value.substring(0, 8);
+            }
+            
+            // 자동으로 하이픈 추가
+            if (value.length > 4) {
+                value = value.substring(0, 4) + '-' + value.substring(4);
+            }
+            if (value.length > 7) {
+                value = value.substring(0, 7) + '-' + value.substring(7, 9);
+            }
+            
+            input.value = value;
+        }
+
+        // 전화번호 자동 포맷팅 (010-1234-5678)
+        function formatPhone(input) {
+            let value = input.value.replace(/[^\d]/g, ''); // 숫자만 추출
+            
+            // 최대 11자리까지만 입력 가능
+            if (value.length > 11) {
+                value = value.substring(0, 11);
+            }
+            
+            // 자동으로 하이픈 추가
+            if (value.length > 3) {
+                value = value.substring(0, 3) + '-' + value.substring(3);
+            }
+            if (value.length > 8) {
+                value = value.substring(0, 8) + '-' + value.substring(8, 12);
+            }
+            
+            input.value = value;
+        }
+
+        // TOP 버튼 클릭
+        function scrollToTop(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
         // 직접 입력하기 처리
-        function handleDirectInput() {
+        function handleDirectInput(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             // 메인 콘텐츠 숨기고 1단계 폼 보이기
             document.getElementById('mainContent').style.display = 'none';
             goToStep(1);
         }
 
         // 단계 이동 함수
-        function goToStep(step) {
+        function goToStep(step, e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             // 모든 단계 숨기기
             const steps = document.querySelectorAll('.form-step');
             steps.forEach(function(stepEl) {
@@ -1059,7 +1165,11 @@
         }
 
         // 약관 모달 닫기
-        function closeAgreementModal() {
+        function closeAgreementModal(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             document.getElementById('agreementModal').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
@@ -1067,12 +1177,24 @@
         // 약관 모달 배경 클릭 시 닫기
         document.getElementById('agreementModal').addEventListener('click', function(e) {
             if (e.target === this) {
-                closeAgreementModal();
+                closeAgreementModal(e);
+            }
+        });
+
+        // 터치 이벤트로도 처리
+        document.getElementById('agreementModal').addEventListener('touchend', function(e) {
+            if (e.target === this) {
+                e.preventDefault();
+                closeAgreementModal(e);
             }
         });
 
         // 폼 제출
-        async function submitForm() {
+        async function submitForm(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             // 필수 체크박스 확인
             const agree1 = document.getElementById('agree1').checked;
             const agree2 = document.getElementById('agree2').checked;
@@ -1146,7 +1268,11 @@
         }
 
         // 신청 완료 모달 닫기
-        function closeSuccessModal() {
+        function closeSuccessModal(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             document.getElementById('successModal').classList.remove('active');
             document.body.style.overflow = 'auto';
             resetForm();
@@ -1155,7 +1281,15 @@
         // 신청 완료 모달 배경 클릭 시 닫기
         document.getElementById('successModal').addEventListener('click', function(e) {
             if (e.target === this) {
-                closeSuccessModal();
+                closeSuccessModal(e);
+            }
+        });
+
+        // 터치 이벤트로도 처리
+        document.getElementById('successModal').addEventListener('touchend', function(e) {
+            if (e.target === this) {
+                e.preventDefault();
+                closeSuccessModal(e);
             }
         });
 
