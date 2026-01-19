@@ -47,7 +47,7 @@ export async function onRequest(context) {
         countQuery += ' WHERE status = ?';
         countParams.push(status);
       }
-      const { results: countResults } = await db.prepare(countQuery).bind(...countParams).first();
+      const countResult = await db.prepare(countQuery).bind(...countParams).first();
 
       return new Response(
         JSON.stringify({
@@ -56,8 +56,8 @@ export async function onRequest(context) {
           pagination: {
             page,
             limit,
-            total: countResults?.total || 0,
-            totalPages: Math.ceil((countResults?.total || 0) / limit),
+            total: countResult?.total || 0,
+            totalPages: Math.ceil((countResult?.total || 0) / limit),
           },
         }),
         {
@@ -66,28 +66,6 @@ export async function onRequest(context) {
       );
     }
 
-    // GET /api/inquiries/:id - 특정 문의 조회
-    if (method === 'GET' && path.match(/^\/api\/inquiries\/\d+$/)) {
-      const id = path.split('/').pop();
-      const result = await db.prepare('SELECT * FROM inquiries WHERE id = ?').bind(id).first();
-
-      if (!result) {
-        return new Response(
-          JSON.stringify({ success: false, error: '문의를 찾을 수 없습니다.' }),
-          {
-            status: 404,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      return new Response(
-        JSON.stringify({ success: true, data: result }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
 
     // POST /api/inquiries - 새 문의 생성
     if (method === 'POST' && path === '/api/inquiries') {
@@ -131,82 +109,6 @@ export async function onRequest(context) {
       );
     }
 
-    // PUT /api/inquiries/:id - 문의 수정
-    if (method === 'PUT' && path.match(/^\/api\/inquiries\/\d+$/)) {
-      const id = path.split('/').pop();
-      const body = await request.json();
-      const { status, notes } = body;
-
-      const updateFields = [];
-      const updateValues = [];
-
-      if (status) {
-        updateFields.push('status = ?');
-        updateValues.push(status);
-      }
-
-      if (notes !== undefined) {
-        updateFields.push('notes = ?');
-        updateValues.push(notes);
-      }
-
-      updateFields.push('updated_at = CURRENT_TIMESTAMP');
-      updateValues.push(id);
-
-      if (updateFields.length === 1) {
-        return new Response(
-          JSON.stringify({ success: false, error: '수정할 항목이 없습니다.' }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      const query = `UPDATE inquiries SET ${updateFields.join(', ')} WHERE id = ?`;
-      const { success } = await db.prepare(query).bind(...updateValues).run();
-
-      if (success) {
-        const result = await db.prepare('SELECT * FROM inquiries WHERE id = ?').bind(id).first();
-        return new Response(
-          JSON.stringify({ success: true, data: result }),
-          {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      return new Response(
-        JSON.stringify({ success: false, error: '문의 수정에 실패했습니다.' }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
-
-    // DELETE /api/inquiries/:id - 문의 삭제
-    if (method === 'DELETE' && path.match(/^\/api\/inquiries\/\d+$/)) {
-      const id = path.split('/').pop();
-      const { success } = await db.prepare('DELETE FROM inquiries WHERE id = ?').bind(id).run();
-
-      if (success) {
-        return new Response(
-          JSON.stringify({ success: true, message: '문의가 삭제되었습니다.' }),
-          {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
-      }
-
-      return new Response(
-        JSON.stringify({ success: false, error: '문의 삭제에 실패했습니다.' }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
 
     // GET /api/stats - 통계 정보
     if (method === 'GET' && path === '/api/stats') {

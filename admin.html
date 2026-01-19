@@ -796,9 +796,20 @@
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
+            // 로그인 체크 (간단한 비밀번호만 체크)
+            checkLogin();
             loadStats();
             loadInquiries();
         });
+
+        // 로그인 체크 (단순 비밀번호만)
+        function checkLogin() {
+            const savedPassword = localStorage.getItem('admin_password');
+            if (!savedPassword) {
+                window.location.href = '/login.html';
+                return;
+            }
+        }
 
         // 통계 로드
         async function loadStats() {

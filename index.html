@@ -5,11 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>이미지 갤러리</title>
     <style>
+        /* Paperlogy 폰트 정의 */
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-1Thin.ttf') format('truetype');
+            font-weight: 100;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-2ExtraLight.ttf') format('truetype');
+            font-weight: 200;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-3Light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-4Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-5Medium.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-6SemiBold.ttf') format('truetype');
+            font-weight: 600;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-7Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-8ExtraBold.ttf') format('truetype');
+            font-weight: 800;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Paperlogy';
+            src: url('font/Paperlogy-9Black.ttf') format('truetype');
+            font-weight: 900;
+            font-style: normal;
+        }
+
         body {
             margin: 0;
             padding: 0;
             background-color: transparent;
             overflow-x: hidden;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .container {
             width: 100%;
@@ -187,13 +244,15 @@
         .modal-header h2 {
             color: white;
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 700;
             margin: 0 0 8px 0;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .modal-header p {
             color: white;
             font-size: 16px;
             margin: 0;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .modal-close {
             position: absolute;
@@ -230,8 +289,9 @@
             padding: 8px 16px;
             border-radius: 8px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 20px;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .quick-apply-label::after {
             content: '';
@@ -253,7 +313,7 @@
             padding: 16px 20px;
             border-radius: 8px;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -261,6 +321,7 @@
             gap: 10px;
             margin-bottom: 15px;
             transition: background-color 0.3s;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .kakao-btn:hover {
             background-color: #FDD835;
@@ -291,16 +352,18 @@
         }
         .form-title {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
             color: #333;
             margin-bottom: 8px;
             text-align: center;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .form-subtitle {
             font-size: 14px;
             color: #666;
             margin-bottom: 25px;
             text-align: center;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .form-group {
             margin-bottom: 20px;
@@ -311,6 +374,7 @@
             color: #333;
             margin-bottom: 8px;
             font-weight: 500;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .form-label .required {
             color: #ff0000;
@@ -322,6 +386,7 @@
             border-radius: 6px;
             font-size: 16px;
             box-sizing: border-box;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         @media (max-width: 768px) {
             .container {
@@ -411,6 +476,7 @@
             font-size: 12px;
             color: #999;
             margin-top: 5px;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .form-buttons {
             display: flex;
@@ -423,9 +489,10 @@
             border: none;
             border-radius: 6px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .form-btn-primary {
             background-color: #4A90E2;
@@ -475,6 +542,7 @@
             font-size: 14px;
             color: #333;
             cursor: pointer;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .agreement-checkbox .required {
             color: #ff0000;
@@ -484,6 +552,7 @@
             color: #4A90E2;
             text-decoration: underline;
             cursor: pointer;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .agreement-view:hover {
             color: #357ABD;
@@ -533,6 +602,8 @@
             margin: 0;
             font-size: 20px;
             color: #333;
+            font-weight: 700;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .agreement-modal-close {
             width: 30px;
@@ -554,6 +625,7 @@
             line-height: 1.8;
             color: #333;
             white-space: pre-line;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .agreement-modal-body strong {
             font-weight: bold;
@@ -606,15 +678,17 @@
         }
         .success-title {
             font-size: 22px;
-            font-weight: bold;
+            font-weight: 700;
             color: #333;
             margin-bottom: 15px;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .success-message {
             font-size: 16px;
             color: #666;
             line-height: 1.6;
             margin-bottom: 30px;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .success-btn {
             width: 100%;
@@ -624,9 +698,10 @@
             border: none;
             border-radius: 6px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
         }
         .success-btn:hover {
             background-color: #357ABD;

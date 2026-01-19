@@ -17,3 +17,9 @@ CREATE TABLE IF NOT EXISTS inquiries (
 CREATE INDEX IF NOT EXISTS idx_status ON inquiries(status);
 CREATE INDEX IF NOT EXISTS idx_created_at ON inquiries(created_at);
 CREATE INDEX IF NOT EXISTS idx_phone_number ON inquiries(phone_number);
+
+-- 관리자 테이블
+CREATE TABLE IF NOT EXISTS admin (
+    id INTEGER PRIMARY KEY,
+    password TEXT NOT NULL
+);
