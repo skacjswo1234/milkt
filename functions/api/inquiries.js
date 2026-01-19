@@ -110,34 +110,6 @@ export async function onRequest(context) {
     }
 
 
-    // GET /api/stats - 통계 정보
-    if (method === 'GET' && path === '/api/stats') {
-      const stats = await db.prepare(`
-        SELECT 
-          COUNT(*) as total,
-          SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-          SUM(CASE WHEN status = 'contacted' THEN 1 ELSE 0 END) as contacted,
-          SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed,
-          SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled
-        FROM inquiries
-      `).first();
-
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          data: {
-            total: stats?.total || 0,
-            pending: stats?.pending || 0,
-            contacted: stats?.contacted || 0,
-            completed: stats?.completed || 0,
-            cancelled: stats?.cancelled || 0
-          }
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
 
     return new Response(
       JSON.stringify({ success: false, error: 'Not Found' }),

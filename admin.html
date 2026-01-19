@@ -815,9 +815,14 @@
         async function loadStats() {
             try {
                 const response = await fetch('/api/stats');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const result = await response.json();
                 
-                if (result.success) {
+                if (result.success && result.data) {
                     const stats = result.data;
                     document.getElementById('stat-total').textContent = stats.total || 0;
                     document.getElementById('stat-pending').textContent = stats.pending || 0;
@@ -827,9 +832,25 @@
 
                     // 배지 업데이트
                     document.getElementById('badge-all').textContent = stats.total || 0;
+                } else {
+                    console.error('통계 데이터 형식 오류:', result);
+                    // 기본값 설정
+                    document.getElementById('stat-total').textContent = 0;
+                    document.getElementById('stat-pending').textContent = 0;
+                    document.getElementById('stat-contacted').textContent = 0;
+                    document.getElementById('stat-completed').textContent = 0;
+                    document.getElementById('stat-cancelled').textContent = 0;
+                    document.getElementById('badge-all').textContent = 0;
                 }
             } catch (error) {
                 console.error('통계 로드 실패:', error);
+                // 에러 발생 시 기본값 설정
+                document.getElementById('stat-total').textContent = 0;
+                document.getElementById('stat-pending').textContent = 0;
+                document.getElementById('stat-contacted').textContent = 0;
+                document.getElementById('stat-completed').textContent = 0;
+                document.getElementById('stat-cancelled').textContent = 0;
+                document.getElementById('badge-all').textContent = 0;
             }
         }
 
