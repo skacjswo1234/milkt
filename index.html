@@ -35,6 +35,7 @@
             position: sticky;
             bottom: 0;
             z-index: 10;
+            cursor: pointer;
         }
         .banner-wrapper {
             position: relative;
@@ -44,6 +45,7 @@
             width: 100%;
             height: auto;
             display: block;
+            cursor: pointer;
         }
         .banner-img-1 {
             position: relative;
@@ -133,6 +135,432 @@
                 bottom: 120px;
             }
         }
+        /* 모달 오버레이 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        /* 모달 팝업 */
+        .modal-popup {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            max-height: 90vh;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            border: 3px solid #ff0000;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        /* 파란색 상단 배너 */
+        .modal-header {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .modal-header h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+        }
+        .modal-header p {
+            color: white;
+            font-size: 16px;
+            margin: 0;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #4A90E2;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .modal-close:hover {
+            transform: scale(1.1);
+        }
+        /* 신청 섹션 */
+        .modal-content {
+            padding: 30px 20px;
+            text-align: center;
+            min-height: 200px;
+        }
+        .quick-apply-label {
+            position: relative;
+            display: inline-block;
+            background-color: #333;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .quick-apply-label::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #333;
+        }
+        .kakao-btn {
+            width: 100%;
+            background-color: #FEE500;
+            color: #000;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+        .kakao-btn:hover {
+            background-color: #FDD835;
+        }
+        .kakao-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #000;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .direct-input-link {
+            color: #4A90E2;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-block;
+        }
+        .direct-input-link:hover {
+            color: #357ABD;
+        }
+        /* 직접 입력 폼 스타일 */
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+        }
+        .form-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .form-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-label .required {
+            color: #ff0000;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4A90E2;
+        }
+        .form-example {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .form-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-btn-primary {
+            background-color: #4A90E2;
+            color: white;
+        }
+        .form-btn-primary:hover {
+            background-color: #357ABD;
+        }
+        .form-btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .form-btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        .form-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        /* 약관 동의 스타일 */
+        .agreement-list {
+            margin-top: 20px;
+        }
+        .agreement-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+        }
+        .agreement-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .agreement-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .agreement-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .agreement-checkbox label {
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+        }
+        .agreement-checkbox .required {
+            color: #ff0000;
+        }
+        .agreement-view {
+            font-size: 12px;
+            color: #4A90E2;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .agreement-view:hover {
+            color: #357ABD;
+        }
+        .step-indicator {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 20px;
+        }
+        /* 약관 보기 모달 */
+        .agreement-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .agreement-modal.active {
+            display: flex;
+        }
+        .agreement-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .agreement-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .agreement-modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .agreement-modal-close {
+            width: 30px;
+            height: 30px;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .agreement-modal-close:hover {
+            background-color: #e0e0e0;
+        }
+        .agreement-modal-body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+            white-space: pre-line;
+        }
+        .agreement-modal-body strong {
+            font-weight: bold;
+            color: #000;
+        }
+        .agreement-modal-body ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .agreement-modal-body li {
+            margin-bottom: 5px;
+        }
+        /* 신청 완료 모달 */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .success-modal.active {
+            display: flex;
+        }
+        .success-modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background-color: #4A90E2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: white;
+        }
+        .success-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .success-message {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .success-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .success-btn:hover {
+            background-color: #357ABD;
+        }
+        /* 이미지 클릭 가능 영역 */
+        .clickable-image {
+            cursor: pointer;
+            position: relative;
+        }
+        .clickable-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +632,421 @@
         </div>
     </div>
     <button class="top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">TOP</button>
+
+    <!-- 모달 팝업 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-popup">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">×</button>
+                <h2>3초 만에 끝</h2>
+                <p>이제 성적이 오를거예요!</p>
+            </div>
+            <div class="modal-content" id="mainContent">
+                <div class="quick-apply-label">빠른신청</div>
+                <button class="kakao-btn" onclick="handleKakaoLogin()">
+                    <span class="kakao-icon">💬</span>
+                    카카오로 시작하기
+                </button>
+                <a href="#" class="direct-input-link" onclick="handleDirectInput(); return false;">직접 입력하기</a>
+            </div>
+
+            <!-- 직접 입력 폼 - 1단계: 생년월일 -->
+            <div class="modal-content form-step" id="step1">
+                <div class="form-title">결과가 다른 시작, 밀크T 무료체험부터!</div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="required">*</span>자녀의 생년월일을 입력해주세요.
+                    </label>
+                    <input type="date" class="form-input" id="childBirthday" required>
+                </div>
+                <div class="form-buttons">
+                    <button class="form-btn form-btn-primary" onclick="goToStep(2)">다음</button>
+                </div>
+            </div>
+
+            <!-- 직접 입력 폼 - 2단계: 이름, 전화번호 -->
+            <div class="modal-content form-step" id="step2">
+                <div class="form-title">결과가 다른 시작, 밀크T 무료체험부터!</div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="required">*</span>학부모님의 이름을 입력해주세요.
+                    </label>
+                    <input type="text" class="form-input" id="parentName" placeholder="홍길동" required>
+                    <div class="form-example">ex) 홍길동</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">
+                        <span class="required">*</span>연락 받으실 전화번호를 입력해주세요.
+                    </label>
+                    <input type="tel" class="form-input" id="phoneNumber" placeholder="010-1234-5678" required>
+                </div>
+                <div class="form-buttons">
+                    <button class="form-btn form-btn-secondary" onclick="goToStep(1)">이전</button>
+                    <button class="form-btn form-btn-primary" onclick="goToStep(3)">다음</button>
+                </div>
+            </div>
+
+            <!-- 직접 입력 폼 - 3단계: 약관 동의 -->
+            <div class="modal-content form-step" id="step3">
+                <div class="form-title">결과가 다른 시작, 밀크T 무료체험부터!</div>
+                <div class="form-subtitle">*천재교과서 밀크T 동의 항목</div>
+                <div class="agreement-list">
+                    <div class="agreement-item">
+                        <div class="agreement-header">
+                            <div class="agreement-checkbox">
+                                <input type="checkbox" id="agree1" required>
+                                <label for="agree1"><span class="required">[필수]</span> 밀크T 이용약관</label>
+                            </div>
+                            <a href="#" class="agreement-view" onclick="viewAgreement(1); return false;">[보기]</a>
+                        </div>
+                    </div>
+                    <div class="agreement-item">
+                        <div class="agreement-header">
+                            <div class="agreement-checkbox">
+                                <input type="checkbox" id="agree2" required>
+                                <label for="agree2"><span class="required">[필수]</span> 개인정보 수집 및 이용</label>
+                            </div>
+                            <a href="#" class="agreement-view" onclick="viewAgreement(2); return false;">[보기]</a>
+                        </div>
+                    </div>
+                    <div class="agreement-item">
+                        <div class="agreement-header">
+                            <div class="agreement-checkbox">
+                                <input type="checkbox" id="agree3">
+                                <label for="agree3">[선택] 천재교과서 밀크T의 광고와 마케팅 메시지를 카카오톡으로 받습니다.</label>
+                            </div>
+                            <a href="#" class="agreement-view" onclick="viewAgreement(3); return false;">[보기]</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <button class="form-btn form-btn-secondary" onclick="goToStep(2)">뒤로</button>
+                    <button class="form-btn form-btn-primary" onclick="submitForm()">신청 하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 약관 보기 모달 -->
+    <div class="agreement-modal" id="agreementModal">
+        <div class="agreement-modal-content">
+            <div class="agreement-modal-header">
+                <h3 id="agreementModalTitle">약관</h3>
+                <button class="agreement-modal-close" onclick="closeAgreementModal()">×</button>
+            </div>
+            <div class="agreement-modal-body" id="agreementModalBody"></div>
+        </div>
+    </div>
+
+    <!-- 신청 완료 모달 -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-icon">✓</div>
+            <div class="success-title">신청 완료되었습니다.</div>
+            <div class="success-message">3일 내로 무료체험 안내 해피콜이 진행됩니다.</div>
+            <button class="success-btn" onclick="closeSuccessModal()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        // 모달 열기
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            resetForm();
+        }
+
+        // 배경 클릭 시 모달 닫기
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('agreementModal').classList.contains('active')) {
+                    closeAgreementModal();
+                } else if (document.getElementById('successModal').classList.contains('active')) {
+                    closeSuccessModal();
+                } else {
+                    closeModal();
+                }
+            }
+        });
+
+        // 카카오 로그인 처리
+        function handleKakaoLogin() {
+            // 카카오톡 오픈채팅 링크로 이동
+            window.open('https://open.kakao.com/o/sAxz2amd', '_blank');
+        }
+
+        // 직접 입력하기 처리
+        function handleDirectInput() {
+            // 메인 콘텐츠 숨기고 1단계 폼 보이기
+            document.getElementById('mainContent').style.display = 'none';
+            goToStep(1);
+        }
+
+        // 단계 이동 함수
+        function goToStep(step) {
+            // 모든 단계 숨기기
+            const steps = document.querySelectorAll('.form-step');
+            steps.forEach(function(stepEl) {
+                stepEl.classList.remove('active');
+            });
+
+            // 메인 콘텐츠 숨기기
+            document.getElementById('mainContent').style.display = 'none';
+
+            // 선택한 단계 보이기
+            const currentStep = document.getElementById('step' + step);
+            if (currentStep) {
+                currentStep.classList.add('active');
+            }
+        }
+
+        // 약관 보기
+        function viewAgreement(type) {
+            const agreementTitles = {
+                1: '밀크T 이용약관',
+                2: '개인정보 수집 및 활용 동의',
+                3: '마케팅 활용 동의'
+            };
+
+            const agreementTexts = {
+                1: `제 1 장 총 칙
+
+제1조 [목 적]
+본 약관은 ㈜천재교과서 (이하 "회사"라 합니다)가 운영하는 온라인 교육 사이트 밀크T초등, 밀크T중학, 밀크T고등, 밀크T아이, 밀크T북클럽 (www.milkt.co.kr, mid.milkt.co.kr, high.milkt.co.kr, i.milkt.co.kr , book.milkt.co.kr 이하 "사이트"라 합니다)과 밀크T 학습기를 통하여 제공하는 교육정보서비스 (이하 "서비스"라 합니다)의 이용과 관련하여 회사와 학습생 사이에 권리,의무 및 책임사항 등을 규정하는 것을 목적으로 합니다.
+
+제2조 [정 의]
+1. 본 약관에서 사용하는 용어의 정의는 다음과 같습니다.
+① "회사"라 함은 "학습자료"와 관련된 경제활동을 영위하는 자로서 "이용자"에게 "학습자료" 및 제반 서비스를 제공하는 자를 말합니다.
+② "이용자"라 함은 이 약관에 따라 "회사"가 제공하는 "학습자료" 및 제반 서비스를 이용하는 "학습생" 및 "비학습생"을 말합니다.
+③ "학습생"이라 함은 회사의 사이트에 접속하여 본 약관에 동의함으로써 회사와 이용계약을 체결하고 아이디(ID)를 부여 받은 자로서 회사가 제공하는 정보와 서비스를 지속적으로 이용할 수 있는 자를 말합니다.
+④ "비학습생"이라 함은 "학습생"이 아니면서 "회사"가 제공하는 "학습자료" 및 제반 서비스를 이용하는 자를 말합니다.
+⑤ "학습자료"라 함은 회사가 제작하여 학습전용기기 또는 웹사이트에서 제공 및 판매하는 유ㆍ무료 강좌 또는 유ㆍ무료 서비스 및 기타 관련정보를 의미합니다.
+
+[이하 약관 내용은 계속됩니다...]`,
+                2: `개인정보 수집 및 활용 동의
+
+(주) 천재교과서는 개인정보 보호법 및 관계법령이 정한 바를 준수하여, 적법하게 개인정보를 처리하고 안전하게 관리하고 있습니다.
+
+1. 개인정보의 수집 및 이용 목적
+(주) 천재교과서는 개인정보를 다음의 목적을 위해 처리합니다. 처리한 개인정보는 다음의 목적 이외의 용도로는 사용되지 않으며, 이용 목적이 변경될 시에는 사전동의를 구할 예정입니다.
+
+목적: 밀크T초등/ 북클럽 무료체험
+내용:
+- 무료체험 신청 및 서비스 이용을 위한 법정대리인(학부모) 본인확인
+- 무료체험기기 배포 및 회수
+- 무료체험 진행을 위한 사전 설문조사
+- 추천인이 있을 경우 추천인에게 포인트 제공
+*7세는 밀크T북클럽 무료체험 대상에 포함되지 않습니다.
+
+2. 처리하는 개인정보의 항목은 다음과 같습니다.
+
+구분: 직접 신청하기
+개인정보 항목(필수):
+- 학습생 정보(학년, 이름, 생년월일)
+- 학부모 정보(이름, 휴대폰번호)
+- 거주지역(시/군)
+
+수집·이용 목적: 밀크T 무료체험, 만 14세 미만 아동의 법정대리인 동의 여부 확인
+보유·이용 기간: 탈퇴 시 까지
+
+* 상담 선생님이 무료 체험 신청 안내 및 배송주소 확인을 위한 전화를 드릴 예정입니다.
+* 밀크T 무료체험 서비스 제공을 위하여 최소한의 개인정보이므로 동의하지 않은 경우는 무료체험 이용에 제한이 있을 수 있음.
+* 탈퇴 관련 문의는 고객센터(1577-1533)로 연락 주시기 바랍니다.
+
+3. 수집한 개인정보는 아래의 기간 동안만 보관되고 파기됩니다.
+
+개인정보 파일명: 무료체험 신청정보
+보유근거:
+- 무료체험 신청에 이용된 기기 회수
+- 중복신청 방지
+- 정회원 가입 시 포인트 부여
+보유기간: 탈퇴 시 까지
+
+4. 밀크T 홈페이지 외 외부 사이트를 통해 무료체험을 신청하는 하는 경우 다음과 같이 개인정보 처리 업무를 위탁 합니다.
+
+수탁사명: (주)엠플랜잇
+위탁업무 내용: 밀크T 무료체험 광고 대행`,
+                3: `마케팅 활용 동의
+
+고객님께서 동의하실 경우, 아래의 개인정보가 명시된 목적에 따른 마케팅 활용에 이용 될 수 있으며, 본 사항에 동의하지 않더라도 회원가입이나 서비스 이용이 가능합니다.
+
+이용목적: ㈜천재교과서 및 관계사 ㈜천재교육의 새로운 상품 및 서비스에 대한 마케팅, 이벤트 및 광고성 정보 전송
+
+이용항목:
+- 학부모 정보(이름, 휴대폰번호)
+- 학습생 정보(이름, 학년)
+
+보유이용기간: 탈퇴 시 까지
+
+* 동의를 거부하시는 경우에도 무료체험 학습서비스는 이용하실 수 있습니다.`
+            };
+
+            document.getElementById('agreementModalTitle').textContent = agreementTitles[type] || '약관';
+            document.getElementById('agreementModalBody').textContent = agreementTexts[type] || '약관 내용을 불러올 수 없습니다.';
+            document.getElementById('agreementModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 약관 모달 닫기
+        function closeAgreementModal() {
+            document.getElementById('agreementModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 약관 모달 배경 클릭 시 닫기
+        document.getElementById('agreementModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAgreementModal();
+            }
+        });
+
+        // 폼 제출
+        async function submitForm() {
+            // 필수 체크박스 확인
+            const agree1 = document.getElementById('agree1').checked;
+            const agree2 = document.getElementById('agree2').checked;
+
+            if (!agree1 || !agree2) {
+                alert('필수 약관에 동의해주세요.');
+                return;
+            }
+
+            // 입력값 확인
+            const childBirthday = document.getElementById('childBirthday').value;
+            const parentName = document.getElementById('parentName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+
+            if (!childBirthday || !parentName || !phoneNumber) {
+                alert('모든 필수 항목을 입력해주세요.');
+                return;
+            }
+
+            // 폼 데이터 수집
+            const formData = {
+                childBirthday: childBirthday,
+                parentName: parentName,
+                phoneNumber: phoneNumber,
+                agree1: agree1,
+                agree2: agree2,
+                agree3: document.getElementById('agree3').checked
+            };
+
+            // 서버로 데이터 전송
+            try {
+                const response = await fetch('/api/inquiries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('제출된 데이터:', formData);
+                    
+                    // 기존 모달 닫기
+                    closeModal();
+                    
+                    // 신청 완료 모달 표시
+                    showSuccessModal();
+                } else {
+                    alert('신청 중 오류가 발생했습니다: ' + (result.error || '알 수 없는 오류'));
+                }
+            } catch (error) {
+                console.error('신청 실패:', error);
+                alert('신청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            }
+        }
+
+        // 신청 완료 모달 표시
+        function showSuccessModal() {
+            document.getElementById('successModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 신청 완료 모달 닫기
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            resetForm();
+        }
+
+        // 신청 완료 모달 배경 클릭 시 닫기
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSuccessModal();
+            }
+        });
+
+        // 폼 초기화
+        function resetForm() {
+            document.getElementById('childBirthday').value = '';
+            document.getElementById('parentName').value = '';
+            document.getElementById('phoneNumber').value = '';
+            document.getElementById('agree1').checked = false;
+            document.getElementById('agree2').checked = false;
+            document.getElementById('agree3').checked = false;
+            
+            // 모든 단계 숨기기
+            const steps = document.querySelectorAll('.form-step');
+            steps.forEach(function(stepEl) {
+                stepEl.classList.remove('active');
+            });
+            
+            // 메인 콘텐츠 다시 보이기
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+
+        // 이미지 클릭 시 모달 열기 (무료체험 버튼이 있는 이미지에 적용)
+        document.addEventListener('DOMContentLoaded', function() {
+            // 컨테이너 안의 모든 이미지에 클릭 이벤트 추가
+            const containerImages = document.querySelectorAll('.image-item img');
+            containerImages.forEach(function(img) {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', function() {
+                    openModal();
+                });
+            });
+
+            // 고정하단 배너 이미지들에 클릭 이벤트 추가
+            const bannerImages = document.querySelectorAll('.sticky-banner img');
+            bannerImages.forEach(function(img) {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openModal();
+                });
+            });
+
+            // 배너 전체 영역도 클릭 가능하도록
+            const bannerWrapper = document.querySelector('.banner-wrapper');
+            if (bannerWrapper) {
+                bannerWrapper.style.cursor = 'pointer';
+                bannerWrapper.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openModal();
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 

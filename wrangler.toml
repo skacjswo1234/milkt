@@ -1,0 +1,7 @@
+name = "milkt-admin"
+compatibility_date = "2024-01-01"
+
+[[d1_databases]]
+binding = "milkt-db"
+database_name = "milkt-db"
+database_id = "698d2092-0c6e-4c23-8944-841b3191ae26"
