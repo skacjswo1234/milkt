@@ -491,6 +491,10 @@
             outline: none;
             border-color: #4A90E2;
         }
+        .form-input.error {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
         .form-example {
             font-size: 12px;
             color: #999;
@@ -848,7 +852,7 @@
                     <label class="form-label">
                         <span class="required">*</span>자녀의 생년월일을 입력해주세요.
                     </label>
-                    <input type="text" class="form-input" id="childBirthday" placeholder="예: 2020-01-01" maxlength="10" oninput="formatDate(this)" required>
+                    <input type="text" class="form-input" id="childBirthday" placeholder="예: 2020-01-01" maxlength="10" oninput="formatDate(this); clearInputError('childBirthday')" required>
                 </div>
                 <div class="form-buttons">
                     <button class="form-btn form-btn-primary" onclick="goToStep(2, event)">다음</button>
@@ -862,14 +866,14 @@
                     <label class="form-label">
                         <span class="required">*</span>학부모님의 이름을 입력해주세요.
                     </label>
-                    <input type="text" class="form-input" id="parentName" placeholder="홍길동" required>
+                    <input type="text" class="form-input" id="parentName" placeholder="홍길동" oninput="clearInputError('parentName')" required>
                     <div class="form-example">ex) 홍길동</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">
                         <span class="required">*</span>연락 받으실 전화번호를 입력해주세요.
                     </label>
-                    <input type="tel" class="form-input" id="phoneNumber" placeholder="010-1234-5678" maxlength="13" oninput="formatPhone(this)" required>
+                    <input type="tel" class="form-input" id="phoneNumber" placeholder="010-1234-5678" maxlength="13" oninput="formatPhone(this); clearInputError('phoneNumber')" required>
                 </div>
                 <div class="form-buttons">
                     <button class="form-btn form-btn-secondary" onclick="goToStep(1, event)">이전</button>
@@ -1055,12 +1059,157 @@
             goToStep(1);
         }
 
+        // 입력 필드 에러 표시 제거
+        function clearInputError(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.classList.remove('error');
+            }
+        }
+
+        // 입력 필드 에러 표시
+        function showInputError(inputId) {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.classList.add('error');
+            }
+        }
+
+        // 1단계 검증 (생년월일)
+        function validateStep1() {
+            const childBirthdayInput = document.getElementById('childBirthday');
+            const childBirthday = childBirthdayInput.value.trim();
+            
+            clearInputError('childBirthday');
+            
+            if (!childBirthday) {
+                alert('자녀의 생년월일을 입력해주세요.');
+                showInputError('childBirthday');
+                childBirthdayInput.focus();
+                return false;
+            }
+
+            // 날짜 형식 검증 (YYYY-MM-DD)
+            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+            if (!datePattern.test(childBirthday)) {
+                alert('생년월일을 올바른 형식으로 입력해주세요. (예: 2020-01-01)');
+                showInputError('childBirthday');
+                childBirthdayInput.focus();
+                return false;
+            }
+
+            // 날짜 유효성 검증
+            const date = new Date(childBirthday);
+            const [year, month, day] = childBirthday.split('-').map(Number);
+            
+            if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
+                alert('올바른 날짜를 입력해주세요.');
+                showInputError('childBirthday');
+                childBirthdayInput.focus();
+                return false;
+            }
+
+            // 미래 날짜 체크
+            if (date > new Date()) {
+                alert('미래 날짜는 입력할 수 없습니다.');
+                showInputError('childBirthday');
+                childBirthdayInput.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // 2단계 검증 (이름, 전화번호)
+        function validateStep2() {
+            const parentNameInput = document.getElementById('parentName');
+            const phoneNumberInput = document.getElementById('phoneNumber');
+            const parentName = parentNameInput.value.trim();
+            const phoneNumber = phoneNumberInput.value.trim();
+
+            clearInputError('parentName');
+            clearInputError('phoneNumber');
+
+            if (!parentName) {
+                alert('학부모님의 이름을 입력해주세요.');
+                showInputError('parentName');
+                parentNameInput.focus();
+                return false;
+            }
+
+            if (parentName.length < 2) {
+                alert('이름을 2자 이상 입력해주세요.');
+                showInputError('parentName');
+                parentNameInput.focus();
+                return false;
+            }
+
+            if (!phoneNumber) {
+                alert('전화번호를 입력해주세요.');
+                showInputError('phoneNumber');
+                phoneNumberInput.focus();
+                return false;
+            }
+
+            // 전화번호 형식 검증 (010-1234-5678 또는 010-123-4567)
+            const phonePattern = /^010-\d{3,4}-\d{4}$/;
+            if (!phonePattern.test(phoneNumber)) {
+                alert('전화번호를 올바른 형식으로 입력해주세요. (예: 010-1234-5678)');
+                showInputError('phoneNumber');
+                phoneNumberInput.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        // 3단계 검증 (약관 동의)
+        function validateStep3() {
+            const agree1 = document.getElementById('agree1').checked;
+            const agree2 = document.getElementById('agree2').checked;
+
+            if (!agree1) {
+                alert('밀크T 이용약관에 동의해주세요.');
+                document.getElementById('agree1').focus();
+                return false;
+            }
+
+            if (!agree2) {
+                alert('개인정보 수집 및 이용에 동의해주세요.');
+                document.getElementById('agree2').focus();
+                return false;
+            }
+
+            return true;
+        }
+
         // 단계 이동 함수
         function goToStep(step, e) {
             if (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
+
+            // 현재 단계 확인 및 검증
+            const currentStepEl = document.querySelector('.form-step.active');
+            if (currentStepEl) {
+                const currentStepId = currentStepEl.id;
+                
+                // 1단계에서 2단계로 이동 시 검증
+                if (currentStepId === 'step1' && step === 2) {
+                    if (!validateStep1()) {
+                        return;
+                    }
+                }
+                
+                // 2단계에서 3단계로 이동 시 검증
+                if (currentStepId === 'step2' && step === 3) {
+                    if (!validateStep2()) {
+                        return;
+                    }
+                }
+            }
+
             // 모든 단계 숨기기
             const steps = document.querySelectorAll('.form-step');
             steps.forEach(function(stepEl) {
@@ -1071,9 +1220,9 @@
             document.getElementById('mainContent').style.display = 'none';
 
             // 선택한 단계 보이기
-            const currentStep = document.getElementById('step' + step);
-            if (currentStep) {
-                currentStep.classList.add('active');
+            const targetStep = document.getElementById('step' + step);
+            if (targetStep) {
+                targetStep.classList.add('active');
             }
         }
 
@@ -1195,32 +1344,21 @@
                 e.preventDefault();
                 e.stopPropagation();
             }
-            // 필수 체크박스 확인
-            const agree1 = document.getElementById('agree1').checked;
-            const agree2 = document.getElementById('agree2').checked;
 
-            if (!agree1 || !agree2) {
-                alert('필수 약관에 동의해주세요.');
+            // 3단계 검증 (약관 동의)
+            if (!validateStep3()) {
                 return;
             }
 
-            // 입력값 확인
+            // 모든 입력값 재검증
+            if (!validateStep1() || !validateStep2()) {
+                return;
+            }
+
+            // 입력값 가져오기
             const childBirthday = document.getElementById('childBirthday').value.trim();
             const parentName = document.getElementById('parentName').value.trim();
             const phoneNumber = document.getElementById('phoneNumber').value.trim();
-
-            if (!childBirthday || !parentName || !phoneNumber) {
-                alert('모든 필수 항목을 입력해주세요.');
-                return;
-            }
-
-            // 날짜 형식 검증 (YYYY-MM-DD)
-            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-            if (!datePattern.test(childBirthday)) {
-                alert('생년월일을 올바른 형식으로 입력해주세요. (예: 2020-01-01)');
-                document.getElementById('childBirthday').focus();
-                return;
-            }
 
             // 폼 데이터 수집
             const formData = {
