@@ -296,71 +296,30 @@
             text-align: center;
             min-height: 200px;
         }
-        .quick-apply-label {
-            position: relative;
-            display: inline-block;
-            background-color: #333;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
-        }
-        .quick-apply-label::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid #333;
-        }
-        .kakao-btn {
+        .direct-input-link {
             width: 100%;
-            background-color: #FEE500;
-            color: #000;
-            border: none;
-            padding: 16px 20px;
-            border-radius: 8px;
+            background-color: #4A90E2;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
             font-size: 18px;
             font-weight: 600;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            padding: 16px 20px;
+            border-radius: 8px;
             transition: background-color 0.3s;
             font-family: 'Paperlogy', 'Malgun Gothic', '맑은 고딕', Arial, sans-serif;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             pointer-events: auto;
             min-height: 48px;
-        }
-        .kakao-btn:hover {
-            background-color: #FDD835;
-        }
-        .kakao-icon {
-            width: 24px;
-            height: 24px;
-            background-color: #000;
-            border-radius: 4px;
-            display: inline-block;
-        }
-        .direct-input-link {
-            color: #4A90E2;
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 14px;
-            display: inline-block;
+            box-sizing: border-box;
         }
         .direct-input-link:hover {
-            color: #357ABD;
+            background-color: #357ABD;
+            color: white;
         }
         /* 직접 입력 폼 스타일 */
         .form-step {
@@ -453,11 +412,6 @@
             .form-input {
                 font-size: 16px; /* iOS 줌 방지 */
                 padding: 14px;
-            }
-            
-            .kakao-btn {
-                font-size: 16px; /* iOS 줌 방지 */
-                padding: 18px 20px;
             }
             
             .form-title {
@@ -837,11 +791,6 @@
                 <p>이제 성적이 오를거예요!</p>
             </div>
             <div class="modal-content" id="mainContent">
-                <div class="quick-apply-label">빠른신청</div>
-                <button class="kakao-btn" onclick="handleKakaoLogin(event)">
-                    <span class="kakao-icon">💬</span>
-                    카카오로 시작하기
-                </button>
                 <a href="#" class="direct-input-link" onclick="handleDirectInput(event); return false;">직접 입력하기</a>
             </div>
 
@@ -904,15 +853,6 @@
                             <a href="#" class="agreement-view" onclick="viewAgreement(2); return false;">[보기]</a>
                         </div>
                     </div>
-                    <div class="agreement-item">
-                        <div class="agreement-header">
-                            <div class="agreement-checkbox">
-                                <input type="checkbox" id="agree3">
-                                <label for="agree3">[선택] 천재교과서 밀크T의 광고와 마케팅 메시지를 카카오톡으로 받습니다.</label>
-                            </div>
-                            <a href="#" class="agreement-view" onclick="viewAgreement(3); return false;">[보기]</a>
-                        </div>
-                    </div>
                 </div>
                 <div class="form-buttons">
                     <button class="form-btn form-btn-secondary" onclick="goToStep(2, event)">뒤로</button>
@@ -947,6 +887,9 @@
         function openModal() {
             document.getElementById('modalOverlay').classList.add('active');
             document.body.style.overflow = 'hidden';
+            // 메인 콘텐츠 숨기고 바로 1단계 폼 보이기
+            document.getElementById('mainContent').style.display = 'none';
+            goToStep(1);
         }
 
         // 모달 닫기
@@ -987,16 +930,6 @@
                 }
             }
         });
-
-        // 카카오 로그인 처리
-        function handleKakaoLogin(e) {
-            if (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            // 카카오톡 오픈채팅 링크로 이동
-            window.open('https://open.kakao.com/o/sAxz2amd', '_blank');
-        }
 
         // 생년월일 자동 포맷팅 (YYYY-MM-DD)
         function formatDate(input) {
@@ -1229,8 +1162,7 @@
         function viewAgreement(type) {
             const agreementTitles = {
                 1: '밀크T 이용약관',
-                2: '개인정보 수집 및 활용 동의',
-                3: '마케팅 활용 동의'
+                2: '개인정보 수집 및 활용 동의'
             };
 
             const agreementTexts = {
@@ -1290,20 +1222,7 @@
 4. 밀크T 홈페이지 외 외부 사이트를 통해 무료체험을 신청하는 하는 경우 다음과 같이 개인정보 처리 업무를 위탁 합니다.
 
 수탁사명: (주)엠플랜잇
-위탁업무 내용: 밀크T 무료체험 광고 대행`,
-                3: `마케팅 활용 동의
-
-고객님께서 동의하실 경우, 아래의 개인정보가 명시된 목적에 따른 마케팅 활용에 이용 될 수 있으며, 본 사항에 동의하지 않더라도 회원가입이나 서비스 이용이 가능합니다.
-
-이용목적: ㈜천재교과서 및 관계사 ㈜천재교육의 새로운 상품 및 서비스에 대한 마케팅, 이벤트 및 광고성 정보 전송
-
-이용항목:
-- 학부모 정보(이름, 휴대폰번호)
-- 학습생 정보(이름, 학년)
-
-보유이용기간: 탈퇴 시 까지
-
-* 동의를 거부하시는 경우에도 무료체험 학습서비스는 이용하실 수 있습니다.`
+위탁업무 내용: 밀크T 무료체험 광고 대행`
             };
 
             document.getElementById('agreementModalTitle').textContent = agreementTitles[type] || '약관';
@@ -1360,13 +1279,14 @@
             const phoneNumber = document.getElementById('phoneNumber').value.trim();
 
             // 폼 데이터 수집
+            const agree1 = document.getElementById('agree1').checked;
+            const agree2 = document.getElementById('agree2').checked;
             const formData = {
                 child_birthday: childBirthday,
                 parent_name: parentName,
                 phone_number: phoneNumber,
                 agree1: agree1,
-                agree2: agree2,
-                agree3: document.getElementById('agree3').checked
+                agree2: agree2
             };
 
             // 서버로 데이터 전송
@@ -1437,16 +1357,12 @@
             document.getElementById('phoneNumber').value = '';
             document.getElementById('agree1').checked = false;
             document.getElementById('agree2').checked = false;
-            document.getElementById('agree3').checked = false;
             
             // 모든 단계 숨기기
             const steps = document.querySelectorAll('.form-step');
             steps.forEach(function(stepEl) {
                 stepEl.classList.remove('active');
             });
-            
-            // 메인 콘텐츠 다시 보이기
-            document.getElementById('mainContent').style.display = 'block';
         }
 
 
