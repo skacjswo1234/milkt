@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /functions/
+Disallow: /api/
+
+Sitemap: https://milkt-ulsan.com/sitemap.xml
