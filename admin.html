@@ -363,16 +363,20 @@
 
         .action-buttons {
             display: flex;
-            gap: 5px;
+            gap: 8px;
+            justify-content: flex-start;
         }
 
         .btn-small {
-            padding: 5px 10px;
-            font-size: 12px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
+            min-width: 60px;
+            white-space: nowrap;
         }
 
         .btn-edit {
@@ -749,7 +753,7 @@
             <div class="content-body">
                 <div class="filter-bar">
                     <div class="filter-item">
-                        <label>소스:</label>
+                        <label>담당선생님:</label>
                         <select id="source-filter" onchange="onSourceFilterChange()">
                             <option value="">전체</option>
                         </select>
@@ -769,7 +773,7 @@
                         <div>자녀 생년월일</div>
                         <div>학부모 이름</div>
                         <div>전화번호</div>
-                        <div>소스</div>
+                        <div>담당선생님</div>
                         <div>이용약관</div>
                         <div>개인정보</div>
                         <div>마케팅</div>
@@ -795,7 +799,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>소스 (유입경로)</label>
+                    <label>담당선생님</label>
                     <input type="text" id="edit-source" readonly style="background: #f5f5f5; cursor: default;">
                 </div>
                 <div class="form-group">
@@ -995,7 +999,7 @@
                         <div class="table-cell" data-label="자녀 생년월일">${inquiry.child_birthday}</div>
                         <div class="table-cell" data-label="학부모 이름">${inquiry.parent_name}</div>
                         <div class="table-cell" data-label="전화번호">${inquiry.phone_number}</div>
-                        <div class="table-cell" data-label="소스">${inquiry.source ? inquiry.source : '-'}</div>
+                        <div class="table-cell" data-label="담당선생님">${inquiry.source ? inquiry.source : '-'}</div>
                         <div class="table-cell" data-label="이용약관">${inquiry.agree1 ? '✓' : ''}</div>
                         <div class="table-cell" data-label="개인정보">${inquiry.agree2 ? '✓' : ''}</div>
                         <div class="table-cell" data-label="마케팅">${inquiry.agree3 ? '✓' : ''}</div>
