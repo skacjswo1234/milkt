@@ -23,31 +23,30 @@ export async function onRequest(context) {
     // GET /api/inquiries - 문의 목록 조회
     if (method === 'GET' && path === '/api/inquiries') {
       const status = url.searchParams.get('status') || 'all';
+      const source = url.searchParams.get('source') || '';
       const page = parseInt(url.searchParams.get('page') || '1');
       const limit = parseInt(url.searchParams.get('limit') || '20');
       const offset = (page - 1) * limit;
 
-      let query = 'SELECT * FROM inquiries';
-      let params = [];
-
+      const conditions = [];
+      const params = [];
       if (status !== 'all') {
-        query += ' WHERE status = ?';
+        conditions.push('status = ?');
         params.push(status);
       }
+      if (source) {
+        conditions.push('source = ?');
+        params.push(source);
+      }
+      const where = conditions.length ? ' WHERE ' + conditions.join(' AND ') : '';
 
-      query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-      params.push(limit, offset);
-
-      const { results } = await db.prepare(query).bind(...params).all();
+      let query = 'SELECT * FROM inquiries' + where + ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+      const queryParams = [...params, limit, offset];
+      const { results } = await db.prepare(query).bind(...queryParams).all();
 
       // 전체 개수 조회
-      let countQuery = 'SELECT COUNT(*) as total FROM inquiries';
-      let countParams = [];
-      if (status !== 'all') {
-        countQuery += ' WHERE status = ?';
-        countParams.push(status);
-      }
-      const countResult = await db.prepare(countQuery).bind(...countParams).first();
+      let countQuery = 'SELECT COUNT(*) as total FROM inquiries' + where;
+      const countResult = await db.prepare(countQuery).bind(...params).first();
 
       return new Response(
         JSON.stringify({
@@ -70,7 +69,8 @@ export async function onRequest(context) {
     // POST /api/inquiries - 새 문의 생성
     if (method === 'POST' && path === '/api/inquiries') {
       const body = await request.json();
-      const { child_birthday, parent_name, phone_number, agree1, agree2, agree3 } = body;
+      const { child_birthday, parent_name, phone_number, agree1, agree2, agree3, source } = body;
+      const sourceVal = (source && typeof source === 'string' && source.trim()) ? String(source).trim().slice(0, 100) : null;
 
       if (!child_birthday || !parent_name || !phone_number) {
         return new Response(
@@ -84,9 +84,9 @@ export async function onRequest(context) {
 
       const { success, meta } = await db
         .prepare(
-          'INSERT INTO inquiries (child_birthday, parent_name, phone_number, agree1, agree2, agree3) VALUES (?, ?, ?, ?, ?, ?)'
+          'INSERT INTO inquiries (child_birthday, parent_name, phone_number, agree1, agree2, agree3, source) VALUES (?, ?, ?, ?, ?, ?, ?)'
         )
-        .bind(child_birthday, parent_name, phone_number, agree1 ? 1 : 0, agree2 ? 1 : 0, agree3 ? 1 : 0)
+        .bind(child_birthday, parent_name, phone_number, agree1 ? 1 : 0, agree2 ? 1 : 0, agree3 ? 1 : 0, sourceVal)
         .run();
 
       if (success) {

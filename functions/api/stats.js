@@ -33,12 +33,18 @@ export async function onRequest(context) {
     const completedResult = await db.prepare("SELECT COUNT(*) as count FROM inquiries WHERE status = 'completed'").first();
     const cancelledResult = await db.prepare("SELECT COUNT(*) as count FROM inquiries WHERE status = 'cancelled'").first();
 
+    const { results: sourceRows } = await db.prepare(
+      "SELECT DISTINCT source FROM inquiries WHERE source IS NOT NULL AND source != '' ORDER BY source"
+    ).all();
+    const sources = (sourceRows || []).map((r) => r.source).filter(Boolean);
+
     const stats = {
       total: parseInt(totalResult?.count || 0),
       pending: parseInt(pendingResult?.count || 0),
       contacted: parseInt(contactedResult?.count || 0),
       completed: parseInt(completedResult?.count || 0),
-      cancelled: parseInt(cancelledResult?.count || 0)
+      cancelled: parseInt(cancelledResult?.count || 0),
+      sources
     };
 
     return new Response(
@@ -61,7 +67,8 @@ export async function onRequest(context) {
           pending: 0,
           contacted: 0,
           completed: 0,
-          cancelled: 0
+          cancelled: 0,
+          sources: []
         }
       }),
       {

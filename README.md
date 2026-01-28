@@ -50,6 +50,7 @@ Cloudflare Pages 설정에서:
 문의 목록 조회
 - Query parameters:
   - `status`: all, pending, contacted, completed, cancelled
+  - `source`: 소스(유입경로) 필터 (선생님 고유번호)
   - `page`: 페이지 번호 (기본값: 1)
   - `limit`: 페이지당 항목 수 (기본값: 20)
 
@@ -66,9 +67,11 @@ Cloudflare Pages 설정에서:
     "phone_number": "010-1234-5678",
     "agree1": true,
     "agree2": true,
-    "agree3": false
+    "agree3": false,
+    "source": "선생님고유번호"
   }
   ```
+  - `source`: 선택. 랜딩 유입경로(선생님 고유번호). `?ref=xxx` 또는 `?source=xxx`로 전달 시 자동 포함.
 
 ### PUT /api/inquiries/:id
 문의 수정
@@ -85,6 +88,31 @@ Cloudflare Pages 설정에서:
 
 ### GET /api/stats
 통계 정보 조회
+- `data.sources`: 소스(유입경로) 목록 (관리자 필터용)
+
+## 소스(유입경로) / 선생님별 랜딩 구분
+
+선생님이 뿌린 링크로 들어온 문의를 구분할 수 있습니다.
+
+1. **쿼리 파라미터**
+   - `https://milkt-ulsan.com/?ref=kim` 또는 `?source=kim`
+   - 랜딩 접속 시 `ref`/`source` 저장 후, 신청 폼 제출 시 함께 전송됩니다.
+
+2. **짧은 URL** (`_redirects` 적용)
+   - `https://milkt-ulsan.com/t/kim` → `/?ref=kim` 으로 리다이렉트
+   - 선생님별로 ` /t/고유번호` 형태 링크 배포 가능.
+
+3. **관리자**
+   - 문의 목록에 «소스» 컬럼 표시, 소스별 필터 제공.
+   - 문의 수정 모달에서 유입경로 확인 가능.
+
+### 기존 DB에 source 컬럼 추가 (마이그레이션)
+
+이미 배포된 D1 DB가 있다면 한 번만 실행:
+
+```bash
+npx wrangler d1 execute milkt-db --remote --file=./migrations/001_add_source.sql
+```
 
 ## 사용 방법
 
@@ -94,6 +122,7 @@ Cloudflare Pages 설정에서:
 
 2. **관리자 페이지**: `admin.html`
    - 문의 목록 조회 및 관리
+   - 소스(유입경로) 필터 및 확인
    - 상태 변경 및 메모 작성
    - 통계 확인
 

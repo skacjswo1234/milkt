@@ -749,6 +749,12 @@
             <div class="content-body">
                 <div class="filter-bar">
                     <div class="filter-item">
+                        <label>소스:</label>
+                        <select id="source-filter" onchange="onSourceFilterChange()">
+                            <option value="">전체</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
                         <label>정렬:</label>
                         <select id="sort-select" onchange="loadInquiries()">
                             <option value="newest">최신순</option>
@@ -763,6 +769,7 @@
                         <div>자녀 생년월일</div>
                         <div>학부모 이름</div>
                         <div>전화번호</div>
+                        <div>소스</div>
                         <div>이용약관</div>
                         <div>개인정보</div>
                         <div>마케팅</div>
@@ -787,6 +794,10 @@
                 <button class="modal-close" onclick="closeEditModal()">×</button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label>소스 (유입경로)</label>
+                    <input type="text" id="edit-source" readonly style="background: #f5f5f5; cursor: default;">
+                </div>
                 <div class="form-group">
                     <label>상태</label>
                     <select id="edit-status">
@@ -841,6 +852,7 @@
         let currentPage = 1;
         let currentInquiryId = null;
         let searchTerm = '';
+        let currentSource = '';
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
@@ -890,6 +902,18 @@
 
                     // 배지 업데이트
                     document.getElementById('badge-all').textContent = stats.total || 0;
+
+                    // 소스 필터 옵션
+                    const sel = document.getElementById('source-filter');
+                    const prevVal = sel.value;
+                    sel.innerHTML = '<option value="">전체</option>';
+                    (stats.sources || []).forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = s;
+                        opt.textContent = s;
+                        sel.appendChild(opt);
+                    });
+                    sel.value = prevVal || '';
                 } else {
                     console.error('통계 데이터 형식 오류:', result);
                     // 기본값 설정
@@ -919,6 +943,7 @@
 
             try {
                 let url = `/api/inquiries?page=${currentPage}&limit=20`;
+                if (currentSource) url += `&source=${encodeURIComponent(currentSource)}`;
                 const response = await fetch(url);
                 const result = await response.json();
 
@@ -970,6 +995,7 @@
                         <div class="table-cell" data-label="자녀 생년월일">${inquiry.child_birthday}</div>
                         <div class="table-cell" data-label="학부모 이름">${inquiry.parent_name}</div>
                         <div class="table-cell" data-label="전화번호">${inquiry.phone_number}</div>
+                        <div class="table-cell" data-label="소스">${inquiry.source ? inquiry.source : '-'}</div>
                         <div class="table-cell" data-label="이용약관">${inquiry.agree1 ? '✓' : ''}</div>
                         <div class="table-cell" data-label="개인정보">${inquiry.agree2 ? '✓' : ''}</div>
                         <div class="table-cell" data-label="마케팅">${inquiry.agree3 ? '✓' : ''}</div>
@@ -1030,6 +1056,13 @@
             loadInquiries();
         }
 
+        // 소스 필터 변경
+        function onSourceFilterChange() {
+            currentSource = document.getElementById('source-filter').value.trim();
+            currentPage = 1;
+            loadInquiries();
+        }
+
         // 검색 실행
         function performSearch() {
             searchTerm = document.getElementById('search-input').value.trim();
@@ -1057,6 +1090,7 @@
 
                 if (result.success) {
                     const inquiry = result.data;
+                    document.getElementById('edit-source').value = inquiry.source || '-';
                     document.getElementById('edit-status').value = inquiry.status;
                     document.getElementById('edit-notes').value = inquiry.notes || '';
                     document.getElementById('editModal').classList.add('active');
