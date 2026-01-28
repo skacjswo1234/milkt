@@ -280,8 +280,14 @@
         .inquiries-table {
             background-color: white;
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: visible;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .inquiries-table .table-header,
+        .inquiries-table .table-row {
+            min-width: 1200px;
         }
 
         .table-header {
@@ -313,9 +319,14 @@
         .table-cell {
             font-size: 14px;
             color: #333;
-            overflow: hidden;
+            overflow: visible;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+        
+        .table-cell:last-child {
+            overflow: visible;
+            white-space: normal;
         }
 
         .status-badge {
