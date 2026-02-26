@@ -24,6 +24,7 @@ export async function onRequest(context) {
     if (method === 'GET' && path === '/api/inquiries') {
       const status = url.searchParams.get('status') || 'all';
       const source = url.searchParams.get('source') || '';
+      const landing = url.searchParams.get('landing') || '';
       const page = parseInt(url.searchParams.get('page') || '1');
       const limit = parseInt(url.searchParams.get('limit') || '20');
       const offset = (page - 1) * limit;
@@ -37,6 +38,10 @@ export async function onRequest(context) {
       if (source) {
         conditions.push('source = ?');
         params.push(source);
+      }
+      if (landing) {
+        conditions.push('(landing = ? OR (landing IS NULL AND ? = \'milkt-56\'))');
+        params.push(landing, landing);
       }
       const where = conditions.length ? ' WHERE ' + conditions.join(' AND ') : '';
 
@@ -69,8 +74,9 @@ export async function onRequest(context) {
     // POST /api/inquiries - 새 문의 생성
     if (method === 'POST' && path === '/api/inquiries') {
       const body = await request.json();
-      const { child_birthday, parent_name, phone_number, agree1, agree2, agree3, source } = body;
+      const { child_birthday, parent_name, phone_number, agree1, agree2, agree3, source, landing } = body;
       const sourceVal = (source && typeof source === 'string' && source.trim()) ? String(source).trim().slice(0, 100) : null;
+      const landingVal = (landing === 'milkt-ver2') ? 'milkt-ver2' : 'milkt-56';
 
       if (!child_birthday || !parent_name || !phone_number) {
         return new Response(
@@ -84,9 +90,9 @@ export async function onRequest(context) {
 
       const { success, meta } = await db
         .prepare(
-          'INSERT INTO inquiries (child_birthday, parent_name, phone_number, agree1, agree2, agree3, source) VALUES (?, ?, ?, ?, ?, ?, ?)'
+          'INSERT INTO inquiries (child_birthday, parent_name, phone_number, agree1, agree2, agree3, source, landing) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         )
-        .bind(child_birthday, parent_name, phone_number, agree1 ? 1 : 0, agree2 ? 1 : 0, agree3 ? 1 : 0, sourceVal)
+        .bind(child_birthday, parent_name, phone_number, agree1 ? 1 : 0, agree2 ? 1 : 0, agree3 ? 1 : 0, sourceVal, landingVal)
         .run();
 
       if (success) {

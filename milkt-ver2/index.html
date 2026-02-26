@@ -909,33 +909,34 @@
                 <a href="#" class="direct-input-link" onclick="handleDirectInput(event); return false;">직접 입력하기</a>
             </div>
 
-            <!-- 직접 입력 폼 - 1단계: 생년월일 -->
+            <!-- 직접 입력 폼 - 1단계: 나이 또는 학년 -->
             <div class="modal-content form-step" id="step1">
                 <div class="form-title">결과가 다른 시작, 밀크T 무료체험부터!</div>
                 <div class="form-group">
                     <label class="form-label">
-                        <span class="required">*</span>자녀의 생년월일을 입력해주세요.
+                        <span class="required">*</span>나이 또는 학년을 입력해주세요.
                     </label>
-                    <input type="text" class="form-input" id="childBirthday" placeholder="예: 2020-01-01" maxlength="10" oninput="formatDate(this); clearInputError('childBirthday')" required>
+                    <input type="text" class="form-input" id="childBirthday" placeholder="예: 8세, 초등2학년" maxlength="20" oninput="clearInputError('childBirthday')" required>
+                    <div class="form-example">ex) 8세, 초등2학년, 중1</div>
                 </div>
                 <div class="form-buttons">
                     <button class="form-btn form-btn-primary" onclick="goToStep(2, event)">다음</button>
                 </div>
             </div>
 
-            <!-- 직접 입력 폼 - 2단계: 이름, 전화번호 -->
+            <!-- 직접 입력 폼 - 2단계: 자녀 이름, 학부모 전화번호 -->
             <div class="modal-content form-step" id="step2">
                 <div class="form-title">결과가 다른 시작, 밀크T 무료체험부터!</div>
                 <div class="form-group">
                     <label class="form-label">
-                        <span class="required">*</span>학부모님의 이름을 입력해주세요.
+                        <span class="required">*</span>자녀 이름을 입력해주세요.
                     </label>
                     <input type="text" class="form-input" id="parentName" placeholder="홍길동" oninput="clearInputError('parentName')" required>
                     <div class="form-example">ex) 홍길동</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">
-                        <span class="required">*</span>연락 받으실 전화번호를 입력해주세요.
+                        <span class="required">*</span>학부모 전화번호를 입력해주세요.
                     </label>
                     <input type="tel" class="form-input" id="phoneNumber" placeholder="010-1234-5678" maxlength="13" oninput="formatPhone(this); clearInputError('phoneNumber')" required>
                 </div>
@@ -1139,7 +1140,7 @@
             }
         }
 
-        // 1단계 검증 (생년월일)
+        // 1단계 검증 (나이 또는 학년)
         function validateStep1() {
             const childBirthdayInput = document.getElementById('childBirthday');
             const childBirthday = childBirthdayInput.value.trim();
@@ -1147,35 +1148,7 @@
             clearInputError('childBirthday');
             
             if (!childBirthday) {
-                alert('자녀의 생년월일을 입력해주세요.');
-                showInputError('childBirthday');
-                childBirthdayInput.focus();
-                return false;
-            }
-
-            // 날짜 형식 검증 (YYYY-MM-DD)
-            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-            if (!datePattern.test(childBirthday)) {
-                alert('생년월일을 올바른 형식으로 입력해주세요. (예: 2020-01-01)');
-                showInputError('childBirthday');
-                childBirthdayInput.focus();
-                return false;
-            }
-
-            // 날짜 유효성 검증
-            const date = new Date(childBirthday);
-            const [year, month, day] = childBirthday.split('-').map(Number);
-            
-            if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
-                alert('올바른 날짜를 입력해주세요.');
-                showInputError('childBirthday');
-                childBirthdayInput.focus();
-                return false;
-            }
-
-            // 미래 날짜 체크
-            if (date > new Date()) {
-                alert('미래 날짜는 입력할 수 없습니다.');
+                alert('나이 또는 학년을 입력해주세요.');
                 showInputError('childBirthday');
                 childBirthdayInput.focus();
                 return false;
@@ -1195,7 +1168,7 @@
             clearInputError('phoneNumber');
 
             if (!parentName) {
-                alert('학부모님의 이름을 입력해주세요.');
+                alert('자녀 이름을 입력해주세요.');
                 showInputError('parentName');
                 parentNameInput.focus();
                 return false;
@@ -1420,7 +1393,8 @@
                 phone_number: phoneNumber,
                 agree1: agree1,
                 agree2: agree2,
-                source: source
+                source: source,
+                landing: 'milkt-ver2'
             };
 
             // 서버로 데이터 전송

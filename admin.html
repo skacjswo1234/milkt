@@ -764,6 +764,13 @@
             <div class="content-body">
                 <div class="filter-bar">
                     <div class="filter-item">
+                        <label>문의 구분:</label>
+                        <select id="landing-filter" onchange="onLandingFilterChange()">
+                            <option value="milkt-56">밀크티 5~6세 문의리스트</option>
+                            <option value="milkt-ver2">아이/초등/중고 문의리스트</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
                         <label>담당선생님:</label>
                         <select id="source-filter" onchange="onSourceFilterChange()">
                             <option value="">전체</option>
@@ -779,7 +786,7 @@
                 </div>
 
                 <div class="inquiries-table">
-                    <div class="table-header">
+                    <div class="table-header" id="inquiries-table-header">
                         <div>ID</div>
                         <div>자녀 생년월일</div>
                         <div>학부모 이름</div>
@@ -868,6 +875,7 @@
         let currentInquiryId = null;
         let searchTerm = '';
         let currentSource = '';
+        let currentLanding = 'milkt-56';
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
@@ -957,7 +965,8 @@
             listContainer.innerHTML = '<div class="loading">로딩 중...</div>';
 
             try {
-                let url = `/api/inquiries?page=${currentPage}&limit=20`;
+                updateTableHeaderForLanding();
+                let url = `/api/inquiries?page=${currentPage}&limit=20&landing=${encodeURIComponent(currentLanding)}`;
                 if (currentSource) url += `&source=${encodeURIComponent(currentSource)}`;
                 const response = await fetch(url);
                 const result = await response.json();
@@ -970,8 +979,9 @@
                         inquiries = inquiries.filter(inquiry => {
                             const name = inquiry.parent_name?.toLowerCase() || '';
                             const phone = inquiry.phone_number?.toLowerCase() || '';
+                            const childInfo = (inquiry.child_birthday || '').toString().toLowerCase();
                             const term = searchTerm.toLowerCase();
-                            return name.includes(term) || phone.includes(term);
+                            return name.includes(term) || phone.includes(term) || childInfo.includes(term);
                         });
                     }
                     
@@ -985,9 +995,35 @@
             }
         }
 
+        // 랜딩 구분에 따라 테이블 헤더 텍스트 변경
+        function updateTableHeaderForLanding() {
+            const header = document.getElementById('inquiries-table-header');
+            if (!header) return;
+            const isVer2 = currentLanding === 'milkt-ver2';
+            const col2 = isVer2 ? '나이 또는 학년' : '자녀 생년월일';
+            const col3 = isVer2 ? '자녀 이름' : '학부모 이름';
+            const col4 = isVer2 ? '학부모 전화번호' : '전화번호';
+            header.innerHTML = `
+                <div>ID</div>
+                <div>${col2}</div>
+                <div>${col3}</div>
+                <div>${col4}</div>
+                <div>담당선생님</div>
+                <div>이용약관</div>
+                <div>개인정보</div>
+                <div>마케팅</div>
+                <div>상태</div>
+                <div>작업</div>
+            `;
+        }
+
         // 문의 목록 표시
         function displayInquiries(inquiries, pagination) {
             const listContainer = document.getElementById('inquiries-list');
+            const isVer2 = currentLanding === 'milkt-ver2';
+            const labelCol2 = isVer2 ? '나이 또는 학년' : '자녀 생년월일';
+            const labelCol3 = isVer2 ? '자녀 이름' : '학부모 이름';
+            const labelCol4 = isVer2 ? '학부모 전화번호' : '전화번호';
 
             if (inquiries.length === 0) {
                 listContainer.innerHTML = `
@@ -1007,9 +1043,9 @@
                 html += `
                     <div class="table-row">
                         <div class="table-cell" data-label="ID">${inquiry.id}</div>
-                        <div class="table-cell" data-label="자녀 생년월일">${inquiry.child_birthday}</div>
-                        <div class="table-cell" data-label="학부모 이름">${inquiry.parent_name}</div>
-                        <div class="table-cell" data-label="전화번호">${inquiry.phone_number}</div>
+                        <div class="table-cell" data-label="${labelCol2}">${inquiry.child_birthday || '-'}</div>
+                        <div class="table-cell" data-label="${labelCol3}">${inquiry.parent_name || '-'}</div>
+                        <div class="table-cell" data-label="${labelCol4}">${inquiry.phone_number || '-'}</div>
                         <div class="table-cell" data-label="담당선생님">${inquiry.source ? inquiry.source : '-'}</div>
                         <div class="table-cell" data-label="이용약관">${inquiry.agree1 ? '✓' : ''}</div>
                         <div class="table-cell" data-label="개인정보">${inquiry.agree2 ? '✓' : ''}</div>
@@ -1068,6 +1104,13 @@
         // 페이지 변경
         function changePage(page) {
             currentPage = page;
+            loadInquiries();
+        }
+
+        // 랜딩 구분 변경
+        function onLandingFilterChange() {
+            currentLanding = document.getElementById('landing-filter').value;
+            currentPage = 1;
             loadInquiries();
         }
 
