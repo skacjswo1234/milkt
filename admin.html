@@ -708,10 +708,15 @@
                 <p>관리자 페이지</p>
             </div>
             <div class="nav-menu">
-                <div class="nav-item active">
+                <div class="nav-item active" id="nav-milkt-56" onclick="switchInquiryLanding('milkt-56')">
                     <span class="nav-item-icon">📋</span>
-                    <span class="nav-item-text">문의리스트</span>
-                    <span class="nav-item-badge" id="badge-all">0</span>
+                    <span class="nav-item-text">밀크T5~6세 문의관리</span>
+                    <span class="nav-item-badge" id="badge-56">0</span>
+                </div>
+                <div class="nav-item" id="nav-milkt-ver2" onclick="switchInquiryLanding('milkt-ver2')">
+                    <span class="nav-item-icon">📋</span>
+                    <span class="nav-item-text">밀크T 아이초등중고 문의관리</span>
+                    <span class="nav-item-badge" id="badge-ver2">0</span>
                 </div>
                 <div class="nav-item" onclick="openPasswordModal()">
                     <span class="nav-item-icon">🔒</span>
@@ -728,7 +733,7 @@
         <div class="main-content">
             <div class="content-header">
                 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
-                <h2 id="content-title">문의리스트</h2>
+                <h2 id="content-title">밀크T5~6세 문의관리</h2>
                 <div class="header-actions">
                     <button class="btn btn-secondary" onclick="logout()">로그아웃</button>
                 </div>
@@ -763,13 +768,6 @@
 
             <div class="content-body">
                 <div class="filter-bar">
-                    <div class="filter-item">
-                        <label>문의 구분:</label>
-                        <select id="landing-filter" onchange="onLandingFilterChange()">
-                            <option value="milkt-56">밀크티 5~6세 문의리스트</option>
-                            <option value="milkt-ver2">아이/초등/중고 문의리스트</option>
-                        </select>
-                    </div>
                     <div class="filter-item">
                         <label>담당선생님:</label>
                         <select id="source-filter" onchange="onSourceFilterChange()">
@@ -923,8 +921,7 @@
                     document.getElementById('stat-completed').textContent = stats.completed || 0;
                     document.getElementById('stat-cancelled').textContent = stats.cancelled || 0;
 
-                    // 배지 업데이트
-                    document.getElementById('badge-all').textContent = stats.total || 0;
+                    // 배지 업데이트는 문의 목록 로드 시 해당 구분별로 처리
 
                     // 소스 필터 옵션
                     const sel = document.getElementById('source-filter');
@@ -945,7 +942,6 @@
                     document.getElementById('stat-contacted').textContent = 0;
                     document.getElementById('stat-completed').textContent = 0;
                     document.getElementById('stat-cancelled').textContent = 0;
-                    document.getElementById('badge-all').textContent = 0;
                 }
             } catch (error) {
                 console.error('통계 로드 실패:', error);
@@ -955,7 +951,6 @@
                 document.getElementById('stat-contacted').textContent = 0;
                 document.getElementById('stat-completed').textContent = 0;
                 document.getElementById('stat-cancelled').textContent = 0;
-                document.getElementById('badge-all').textContent = 0;
             }
         }
 
@@ -973,6 +968,10 @@
 
                 if (result.success) {
                     let inquiries = result.data;
+                    const total = result.pagination?.total ?? 0;
+                    const badgeId = currentLanding === 'milkt-ver2' ? 'badge-ver2' : 'badge-56';
+                    const badgeEl = document.getElementById(badgeId);
+                    if (badgeEl) badgeEl.textContent = total;
                     
                     // 검색어가 있으면 필터링
                     if (searchTerm) {
@@ -1107,9 +1106,13 @@
             loadInquiries();
         }
 
-        // 랜딩 구분 변경
-        function onLandingFilterChange() {
-            currentLanding = document.getElementById('landing-filter').value;
+        // 왼쪽 네비 문의 구분 전환 (밀크T5~6세 / 아이초등중고)
+        function switchInquiryLanding(landing) {
+            if (currentLanding === landing) return;
+            currentLanding = landing;
+            document.querySelectorAll('.nav-item[id^="nav-milkt-"]').forEach(el => el.classList.remove('active'));
+            document.getElementById('nav-milkt-' + (landing === 'milkt-ver2' ? 'ver2' : '56')).classList.add('active');
+            document.getElementById('content-title').textContent = landing === 'milkt-ver2' ? '밀크T 아이초등중고 문의관리' : '밀크T5~6세 문의관리';
             currentPage = 1;
             loadInquiries();
         }
