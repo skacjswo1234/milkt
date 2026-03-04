@@ -287,14 +287,14 @@
         
         .inquiries-table .table-header,
         .inquiries-table .table-row {
-            min-width: 1200px;
+            min-width: 1320px;
         }
 
         .table-header {
             background-color: #f8f9fa;
             padding: 15px 20px;
             display: grid;
-            grid-template-columns: 60px 100px 120px 150px 100px 120px 100px 100px 180px;
+            grid-template-columns: 60px 100px 120px 130px 100px 168px 80px 80px 80px 100px 180px;
             gap: 15px;
             font-weight: 600;
             font-size: 14px;
@@ -305,7 +305,7 @@
         .table-row {
             padding: 15px 20px;
             display: grid;
-            grid-template-columns: 60px 100px 120px 150px 100px 120px 100px 100px 180px;
+            grid-template-columns: 60px 100px 120px 130px 100px 168px 80px 80px 80px 100px 180px;
             gap: 15px;
             align-items: center;
             border-bottom: 1px solid #f0f0f0;
@@ -790,6 +790,7 @@
                         <div>학부모 이름</div>
                         <div>전화번호</div>
                         <div>담당선생님</div>
+                        <div>문의등록일</div>
                         <div>이용약관</div>
                         <div>개인정보</div>
                         <div>마케팅</div>
@@ -874,6 +875,30 @@
         let searchTerm = '';
         let currentSource = '';
         let currentLanding = 'milkt-56';
+
+        // 문의등록일을 한국 시간(년월일 시분초)으로 포맷 (DB는 UTC 저장 가정)
+        function formatCreatedAtKo(createdAt) {
+            if (!createdAt) return '-';
+            let d;
+            const s = String(createdAt).trim();
+            if (s.includes('Z') || s.includes('+') || s.match(/[+-]\d{2}:?\d{2}$/)) {
+                d = new Date(s);
+            } else {
+                const iso = s.replace(' ', 'T') + 'Z';
+                d = new Date(iso);
+            }
+            if (isNaN(d.getTime())) return '-';
+            return d.toLocaleString('ko-KR', {
+                timeZone: 'Asia/Seoul',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+        }
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
@@ -1008,6 +1033,7 @@
                 <div>${col3}</div>
                 <div>${col4}</div>
                 <div>담당선생님</div>
+                <div>문의등록일</div>
                 <div>이용약관</div>
                 <div>개인정보</div>
                 <div>마케팅</div>
@@ -1037,7 +1063,7 @@
 
             let html = '';
             inquiries.forEach(inquiry => {
-                const createdDate = new Date(inquiry.created_at).toLocaleDateString('ko-KR');
+                const createdAtFormatted = formatCreatedAtKo(inquiry.created_at);
 
                 html += `
                     <div class="table-row">
@@ -1046,6 +1072,7 @@
                         <div class="table-cell" data-label="${labelCol3}">${inquiry.parent_name || '-'}</div>
                         <div class="table-cell" data-label="${labelCol4}">${inquiry.phone_number || '-'}</div>
                         <div class="table-cell" data-label="담당선생님">${inquiry.source ? inquiry.source : '-'}</div>
+                        <div class="table-cell" data-label="문의등록일">${createdAtFormatted}</div>
                         <div class="table-cell" data-label="이용약관">${inquiry.agree1 ? '✓' : ''}</div>
                         <div class="table-cell" data-label="개인정보">${inquiry.agree2 ? '✓' : ''}</div>
                         <div class="table-cell" data-label="마케팅">${inquiry.agree3 ? '✓' : ''}</div>
