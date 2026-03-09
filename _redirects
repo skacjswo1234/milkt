@@ -1,8 +1,11 @@
-# milkt2-ulsan.com 도메인 -> milkt-ver2 폴더 서빙 (root 건드리지 않음)
-# milkt2 전용 선생님 짧은 URL: /t/고유번호 -> milkt2 랜딩 ?ref=고유번호
-https://milkt2-ulsan.com/t/*  https://milkt2-ulsan.com/?ref=:splat  302
-https://milkt2-ulsan.com/  /milkt-ver2/  200
-https://milkt2-ulsan.com/*  /milkt-ver2/:splat  200
+# milkt-ver2 선생님 짧은 URL (경로 기반: Cloudflare Pages 포함 공통)
+# /milkt-ver2/t/번호 -> /milkt-ver2/?ref=번호
+/milkt-ver2/t/*  /milkt-ver2/?ref=:splat  302
 
 # 선생님별 짧은 URL (root): /t/고유번호 -> 랜딩 ?ref=고유번호
 /t/*  /?ref=:splat  302
+
+# Netlify 전용: milkt2-ulsan.com 도메인 시 root -> milkt-ver2 리라이트 (200)
+https://milkt2-ulsan.com/t/*  https://milkt2-ulsan.com/?ref=:splat  302
+https://milkt2-ulsan.com/  /milkt-ver2/  200
+https://milkt2-ulsan.com/*  /milkt-ver2/:splat  200
