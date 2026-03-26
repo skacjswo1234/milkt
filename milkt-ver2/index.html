@@ -1067,7 +1067,12 @@
         function initLandingSource() {
             try {
                 const params = new URLSearchParams(window.location.search);
-                const ref = params.get('ref') || params.get('source') || '';
+                let ref = params.get('ref') || params.get('source') || '';
+                // /t/담당자번호 형식 (예: https://milkt2-ulsan.com/t/abc12)
+                if (!ref) {
+                    const pathMatch = window.location.pathname.match(/^\/t\/([^/]+)\/?$/);
+                    if (pathMatch) ref = decodeURIComponent(pathMatch[1]);
+                }
                 if (ref && /^[a-zA-Z0-9_-]{1,50}$/.test(ref)) {
                     landingSource = ref.trim();
                     sessionStorage.setItem('milkt_ref', landingSource);
